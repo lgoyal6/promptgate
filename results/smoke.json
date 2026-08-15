@@ -1,0 +1,61 @@
+{
+  "model": "gemma3:12b",
+  "variants": [
+    "full"
+  ],
+  "n_cases": 3,
+  "wall_seconds": 51.3,
+  "rows": [
+    {
+      "strict_verdict": "reject",
+      "tolerant_verdict": "reject",
+      "tag_used": "manager_verify",
+      "has_comment": true,
+      "strict_missed": false,
+      "silently_dropped_reject": false,
+      "correct_tolerant": false,
+      "correct_strict": false,
+      "id": "acc-01",
+      "group": "clear_accept",
+      "variant": "full",
+      "expected": "accept",
+      "seconds": 39.98,
+      "error": null,
+      "raw": "<manager_verify>reject</manager_verify><feedback_comment>{'feedback_comment': 'The agent is attempting to issue a refund without first verifying the amount with get_invoice, which violates policy R4. The agent did call get_invoice earlier and should use that information when issuing a refund.'}</feedback_comment>"
+    },
+    {
+      "strict_verdict": "accept",
+      "tolerant_verdict": "accept",
+      "tag_used": "manager_verify",
+      "has_comment": false,
+      "strict_missed": false,
+      "silently_dropped_reject": false,
+      "correct_tolerant": true,
+      "correct_strict": true,
+      "id": "acc-02",
+      "group": "clear_accept",
+      "variant": "full",
+      "expected": "accept",
+      "seconds": 6.29,
+      "error": null,
+      "raw": "<manager_verify>accept</manager_verify>"
+    },
+    {
+      "strict_verdict": "accept",
+      "tolerant_verdict": "accept",
+      "tag_used": "manager_verify",
+      "has_comment": false,
+      "strict_missed": false,
+      "silently_dropped_reject": false,
+      "correct_tolerant": true,
+      "correct_strict": true,
+      "id": "acc-03",
+      "group": "clear_accept",
+      "variant": "full",
+      "expected": "accept",
+      "seconds": 4.99,
+      "error": null,
+      "raw": "<manager_verify>accept</manager_verify>"
+    }
+  ]
+}
