@@ -9,6 +9,52 @@ model reads a tool call the agent wants to make and returns either
 reason for open sourcing it was that without the evaluation data, nobody can tell why the
 prompt is written the way it is. This is an attempt at that evaluation data.
 
+---
+
+## The short version
+
+**What I noticed.** Parahelp published the six-page prompt that runs their production support
+agent, and said the reason it was safe to publish was that without the evaluation data nobody
+can tell why it is written the way it is. I went to build that evaluation data.
+
+**What I found before I got there.** The prompt states its reject contract four times and
+contradicts itself once:
+
+| line | tag it names for a reject |
+|---:|---|
+| 7 | `<manager_feedback>` |
+| 13 | `<manager_verify>` |
+| 22 | `<manager_verify>` |
+| 47 | `<manager_verify>` |
+
+Accept is `<manager_verify>` in all four places, so **only the reject path is ambiguous**, and
+the statement that disagrees is the first one a reader meets.
+
+**Why that is not cosmetic.** A parser written from the majority form returns `None` on a
+line-7 reject. `None` is also what it returns for a response with no verdict at all. Those are
+indistinguishable:
+
+```python
+parse_strict("<manager_verify>reject</manager_verify>...")     # -> "reject"
+parse_strict("<manager_feedback>reject</manager_feedback>...")  # -> None
+parse_strict("I think this looks fine to me.")                  # -> None
+```
+
+A gate cannot tell *the manager objected* from *the manager said nothing*, so unless the
+caller treats a missing verdict as fatal, the tool call proceeds. **For the component whose
+only job is stopping an out-of-policy refund or password reset, the ambiguity resolves toward
+approving.** The fix is one word.
+
+**How I proved it.** 12 tests, 3 milliseconds, no model and no API key. They assert the exact
+line numbers against the shipped file, so they fail loudly if upstream changes.
+
+**What I have not done.** The benchmark underneath is built and runnable but **the sweep was
+never completed**. There is no accuracy figure, no false-approve rate and no ablation delta in
+this repository, and those are marked NOT RUN rather than reported as zero. What exists is 28
+labelled tool-call decisions balanced 14 accept / 14 reject, and seven ablations of the prompt
+that strip one block at a time. That last part is what would answer the question Parahelp
+raised: which of those six pages are load-bearing and which are habit.
+
 ## The defect
 
 The prompt states its reject contract four times:
