@@ -93,6 +93,46 @@ python3 tests/test_parse.py     # 12 tests, 3ms, no model, no API key
 The tests assert the exact line numbers against the shipped file, so they fail loudly if
 upstream changes.
 
+## How a case flows
+
+```mermaid
+flowchart LR
+  FETCH["fetch_prompt.sh<br/>pulls manager.md"] --> RENDER["prompt.py<br/>fills the template,<br/>instruction text left as published"]
+  CASES[("cases.py<br/>labeled decision set")] --> RENDER
+  RENDER --> RUN["run.py<br/>Ollama over localhost"]
+  RUN --> RAW["manager output"]
+  RAW --> STRICT["parse.py strict<br/>manager_verify only"]
+  RAW --> TOL["parse.py tolerant<br/>also manager_feedback"]
+  STRICT --> EV["evaluate.py"]
+  TOL --> EV
+  EV --> FA["false approve<br/>a forbidden tool call proceeds"]
+  EV --> FR["false reject<br/>a correct action goes to a human"]
+
+  style FA fill:#b62324,color:#fff
+```
+
+The two parsers exist because the published prompt states its reject contract two
+different ways. The two error columns are never averaged: only one of them moves
+money.
+
+## Why the strict parser is the dangerous one
+
+```mermaid
+flowchart TD
+  OUT["manager returns a reject<br/>phrased as on line 7"] --> P{"strict parser"}
+  P --> N["None"]
+  SILENT["manager returns nothing<br/>useful at all"] --> P2{"strict parser"}
+  P2 --> N2["None"]
+  N --> SAME["indistinguishable"]
+  N2 --> SAME
+  SAME --> CALLER{"caller treats a<br/>missing verdict as fatal?"}
+  CALLER -->|"yes"| SAFE["tool call blocked"]
+  CALLER -->|"no"| BAD["tool call proceeds<br/>the manager objected and was not heard"]
+
+  style BAD fill:#b62324,color:#fff
+  style SAME fill:#8250df,color:#fff
+```
+
 ## The benchmark
 
 28 labelled tool-call decisions against a small, unambiguous support policy. Each case is a
