@@ -11,7 +11,21 @@
 </head>
 <body>
 
-<header class="gut">
+<nav class="topbar">
+  <a class="brand" href="https://lakshgoyal.com">Laksh Goyal<span>.</span></a>
+  <div class="navlinks">
+    <a href="https://github.com/lgoyal6/promptgate">GitHub</a>
+    <a href="https://www.linkedin.com/in/lakshgoyal">LinkedIn</a>
+  </div>
+</nav>
+<nav class="tabs" aria-label="Sections">
+    <a href="#sec-home">Home</a>
+    <a href="#sec-contract">The contract</a>
+    <a href="#sec-try">Try it</a>
+    <a href="#sec-limits">Limits</a>
+</nav>
+
+<header id="sec-home" class="gut">
   <div>
     <div class="eyebrow">lgoyal6 / promptgate</div>
     <h1>promptgate<span class="dot">.</span></h1>
@@ -35,7 +49,7 @@
   </dl>
 </header>
 
-<section class="gut">
+<section class="gut" id="sec-contract">
   <div class="eyebrow">Figure 1</div>
   <h2>Four statements of the same contract</h2>
   <p class="lead">
@@ -76,7 +90,7 @@
   </div>
 </section>
 
-<section class="gut">
+<section class="gut" id="sec-try">
   <div class="eyebrow">Figure 2</div>
   <h2>What a gate does with it</h2>
   <p class="lead">
@@ -136,7 +150,7 @@
   </div>
 </section>
 
-<section class="gut">
+<section class="gut" id="sec-limits">
   <div class="eyebrow">Figure 3</div>
   <h2>Where it loses</h2>
   <ul class="map">
@@ -179,5 +193,6 @@
 </footer>
 
 <script src="app.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>
