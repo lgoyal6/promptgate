@@ -9,6 +9,9 @@ model reads a tool call the agent wants to make and returns either
 reason for open sourcing it was that without the evaluation data, nobody can tell why the
 prompt is written the way it is. This is an attempt at that evaluation data.
 
+**[See it: lgoyal6.github.io/promptgate](https://lgoyal6.github.io/promptgate/)** - type a
+manager response and watch a strict parser read a reject as silence.
+
 ---
 
 ## The short version
