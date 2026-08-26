@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>promptgate - the reject that a gate cannot see</title>
+<meta name="description" content="A published production manager prompt states its reject contract four times and contradicts itself once. A parser built from the majority form reads that reject as silence, and a gate treats silence as approval.">
+<meta property="og:title" content="promptgate">
+<meta property="og:description" content="Type a manager response and watch the gate mis-read it. The ambiguity resolves toward approving the tool call.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="gut">
+  <div>
+    <div class="eyebrow">lgoyal6 / promptgate</div>
+    <h1>promptgate<span class="dot">.</span></h1>
+    <p class="thesis">
+      Parahelp published the prompt that runs their production support agent. A manager
+      model reads a tool call the agent wants to make and returns accept, or reject with
+      a comment. Their reason for publishing was that without the evaluation data, nobody
+      can tell why the prompt is written the way it is.
+    </p>
+    <p class="thesis">
+      <strong>It states its reject contract four times and contradicts itself once.</strong>
+      A parser written from the majority form reads a line-7 reject as no verdict at all,
+      and no verdict is what silence looks like too.
+    </p>
+  </div>
+  <dl class="facts">
+    <div class="fact"><dt>says how to reject</dt><dd>4x <small>in six pages</small></dd></div>
+    <div class="fact"><dt>using a different tag</dt><dd>once <small>and it is the first one</small></dd></div>
+    <div class="fact"><dt>a strict parser reads</dt><dd>nothing <small>from that reject</small></dd></div>
+    <div class="fact"><dt>so the tool call</dt><dd>proceeds <small>unless absence is fatal</small></dd></div>
+  </dl>
+</header>
+
+<section class="gut">
+  <div class="eyebrow">Figure 1</div>
+  <h2>Four statements of the same contract</h2>
+  <p class="lead">
+    Every line of the published prompt that says how to reject, and the tag it names.
+    Accept is the same tag in all four places, so only the reject path is ambiguous.
+  </p>
+  <div class="figure">
+    <div class="figcap">
+      <span>the published manager prompt</span>
+      <span id="cap-src">read from the file, not transcribed</span>
+    </div>
+    <div class="grid-wrap"><table class="data" id="contract"></table></div>
+    <div class="banner alarm" id="contract-banner">Loading.</div>
+  </div>
+
+  <div class="split">
+    <div>
+      <h3>Why the first one is the worst place for it</h3>
+      <p>
+        A reader building a parser meets line 7 before the other three. If they follow it,
+        they write a parser that reads a tag the rest of the prompt never uses. If they
+        read on and follow the majority, they write one that cannot see a reject issued
+        the way line 7 describes.
+      </p>
+      <p>
+        The prompt is not redistributed here and neither is its text. Only the line
+        numbers and the tag each names, both read out of the file rather than typed in.
+      </p>
+    </div>
+    <dl class="takeaway">
+      <dt>accept</dt>
+      <dd>One tag, all four places.<small>Never ambiguous.</small></dd>
+      <dt>reject</dt>
+      <dd>Two tags, one contract.<small>Three say one thing, line 7 says another.</small></dd>
+      <dt>the fix</dt>
+      <dd>One word on line 7.<small>A test asserts it, so upstream changes break loudly.</small></dd>
+    </dl>
+  </div>
+</section>
+
+<section class="gut">
+  <div class="eyebrow">Figure 2</div>
+  <h2>What a gate does with it</h2>
+  <p class="lead">
+    Type what the manager returned, or pick one. The two parsers below are the ones in
+    the repository, running here in your tab.
+  </p>
+
+  <div class="figure">
+    <div class="figcap">
+      <span>manager response, in</span>
+      <span id="cap-check">checking the parsers</span>
+    </div>
+    <div class="toolbar">
+      <span class="picklabel">Try one</span>
+      <div class="pick" id="examples" role="group" aria-label="Example responses"></div>
+    </div>
+    <div class="responder">
+      <textarea id="input" spellcheck="false" aria-label="Manager response"></textarea>
+      <div class="verdicts">
+        <dl>
+          <dt>strict parser, reading &lt;manager_verify&gt; only</dt>
+          <dd id="v-strict">-</dd>
+          <dt>tolerant parser, accepting either tag</dt>
+          <dd id="v-tolerant">-</dd>
+          <dt>comment attached</dt>
+          <dd id="v-comment">-</dd>
+        </dl>
+        <div class="gate" id="gate">-</div>
+      </div>
+    </div>
+    <div class="banner" id="parse-banner">Loading.</div>
+  </div>
+
+  <div class="split">
+    <div>
+      <p>
+        <strong>A gate cannot tell "the manager objected" from "the manager said nothing".</strong>
+        Both arrive as no verdict. Unless the caller is written to treat a missing verdict
+        as fatal, the tool call goes through, and the component whose only job is stopping
+        an out-of-policy refund or password reset has resolved its ambiguity toward
+        approving.
+      </p>
+      <p>
+        Accepts are never affected. The failure is one-directional, which is why it can sit
+        in a prompt for a long time without anyone noticing: the system looks like it is
+        working, and it is wrong only on the calls it was built to stop.
+      </p>
+    </div>
+    <dl class="takeaway">
+      <dt>the expensive case</dt>
+      <dd>A reject read as silence.<small>Line 7's form, through a strict parser.</small></dd>
+      <dt>indistinguishable from</dt>
+      <dd>A manager that said nothing.<small>Both return no verdict.</small></dd>
+      <dt>never affected</dt>
+      <dd>Accepts.<small>One tag, every line, no ambiguity.</small></dd>
+    </dl>
+  </div>
+</section>
+
+<section class="gut">
+  <div class="eyebrow">Figure 3</div>
+  <h2>Where it loses</h2>
+  <ul class="map">
+    <li>
+      <b>This is a defect report, not a benchmark result.</b> The decision set exists and
+      the harness runs, but the numbers in this repository come from a three-case smoke
+      run. Nothing here measures how often a model actually rejects correctly.
+      <span class="where">results/smoke.json</span>
+    </li>
+    <li>
+      <b>The defect is in a prompt, not in a product.</b> Whether Parahelp's own parser is
+      strict, tolerant, or treats a missing verdict as fatal is not observable from here,
+      and a correct caller makes the ambiguity harmless.
+      <span class="where">parse.py</span>
+    </li>
+    <li>
+      <b>The decision set is small and mine.</b> 28 cases across seven groups, labelled
+      against a policy written for the purpose. A benchmark whose gold labels are arguable
+      measures the labeller.
+      <span class="where">cases.py</span>
+    </li>
+    <li>
+      <b>The prompt is not redistributed.</b> It is fetched from its public copy at build
+      time, and this page carries only line numbers and tag names out of it.
+      <span class="where">fetch_prompt.sh</span>
+    </li>
+  </ul>
+</section>
+
+<footer class="gut">
+  <span>
+    <a href="https://github.com/lgoyal6/promptgate">github.com/lgoyal6/promptgate</a>
+    &middot; MIT
+  </span>
+  <span>
+    also: <a href="https://lgoyal6.github.io/pms-race/">pms-race</a>
+    &middot; <a href="https://lgoyal6.github.io/flightrisk/">flightrisk</a>
+    &middot; <a href="https://lgoyal6.github.io/tickvault/">tickvault</a>
+  </span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
