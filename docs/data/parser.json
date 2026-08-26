@@ -1,0 +1,117 @@
+{
+ "patterns": {
+  "verify": "<manager_verify>\\s*(accept|reject)\\s*</manager_verify>",
+  "feedback": "<manager_feedback>\\s*(accept|reject)\\s*</manager_feedback>",
+  "comment": "<feedback_comment>(.*?)</feedback_comment>"
+ },
+ "contract": [
+  {
+   "line": 7,
+   "tag": "manager_feedback"
+  },
+  {
+   "line": 13,
+   "tag": "manager_verify"
+  },
+  {
+   "line": 22,
+   "tag": "manager_verify"
+  },
+  {
+   "line": 47,
+   "tag": "manager_verify"
+  }
+ ],
+ "examples": [
+  {
+   "strict_verdict": "accept",
+   "tolerant_verdict": "accept",
+   "tag_used": "manager_verify",
+   "has_comment": false,
+   "strict_missed": false,
+   "silently_dropped_reject": false,
+   "correct_tolerant": true,
+   "correct_strict": true,
+   "label": "the documented form",
+   "text": "<manager_verify>accept</manager_verify>",
+   "expected": "accept"
+  },
+  {
+   "strict_verdict": "reject",
+   "tolerant_verdict": "reject",
+   "tag_used": "manager_verify",
+   "has_comment": true,
+   "strict_missed": false,
+   "silently_dropped_reject": false,
+   "correct_tolerant": true,
+   "correct_strict": true,
+   "label": "a reject, the way three lines describe it",
+   "text": "<manager_verify>reject</manager_verify><feedback_comment>outside the 14 day window</feedback_comment>",
+   "expected": "reject"
+  },
+  {
+   "strict_verdict": null,
+   "tolerant_verdict": "reject",
+   "tag_used": "manager_feedback",
+   "has_comment": true,
+   "strict_missed": true,
+   "silently_dropped_reject": true,
+   "correct_tolerant": true,
+   "correct_strict": false,
+   "label": "a reject, the way line 7 describes it",
+   "text": "<manager_feedback>reject</manager_feedback><feedback_comment>outside the 14 day window</feedback_comment>",
+   "expected": "reject"
+  },
+  {
+   "strict_verdict": null,
+   "tolerant_verdict": null,
+   "tag_used": null,
+   "has_comment": false,
+   "strict_missed": false,
+   "silently_dropped_reject": false,
+   "correct_tolerant": false,
+   "correct_strict": false,
+   "label": "no verdict at all",
+   "text": "I think this looks fine to me.",
+   "expected": "reject"
+  },
+  {
+   "strict_verdict": null,
+   "tolerant_verdict": "reject",
+   "tag_used": "manager_feedback",
+   "has_comment": false,
+   "strict_missed": true,
+   "silently_dropped_reject": true,
+   "correct_tolerant": true,
+   "correct_strict": false,
+   "label": "line 7 again, with the tags spaced out",
+   "text": "<manager_feedback>\n  reject\n</manager_feedback>",
+   "expected": "reject"
+  },
+  {
+   "strict_verdict": "reject",
+   "tolerant_verdict": "reject",
+   "tag_used": "manager_verify",
+   "has_comment": false,
+   "strict_missed": false,
+   "silently_dropped_reject": false,
+   "correct_tolerant": true,
+   "correct_strict": true,
+   "label": "shouting it",
+   "text": "<MANAGER_VERIFY>REJECT</MANAGER_VERIFY>",
+   "expected": "reject"
+  }
+ ],
+ "case_counts": {
+  "total": 28,
+  "by_group": {
+   "clear_accept": 5,
+   "identity": 3,
+   "process": 3,
+   "restraint": 4,
+   "scope": 4,
+   "temptation": 4,
+   "threshold": 5
+  }
+ }
+}
