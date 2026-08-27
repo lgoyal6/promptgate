@@ -1,3 +1,10 @@
+<a href="https://lgoyal6.github.io/promptgate/">
+  <img alt="promptgate - open the live demo" src="docs/og.png">
+</a>
+
+**[Open the live demo](https://lgoyal6.github.io/promptgate/)** - Type a
+manager response and watch a strict parser read a reject as silence.
+
 # promptgate
 
 A decision benchmark for Parahelp's open-sourced manager prompt, and a defect found while
@@ -8,9 +15,6 @@ model reads a tool call the agent wants to make and returns either
 `<manager_verify>accept</manager_verify>` or a reject with a feedback comment. Their stated
 reason for open sourcing it was that without the evaluation data, nobody can tell why the
 prompt is written the way it is. This is an attempt at that evaluation data.
-
-**[See it: lgoyal6.github.io/promptgate](https://lgoyal6.github.io/promptgate/)** - type a
-manager response and watch a strict parser read a reject as silence.
 
 ---
 
